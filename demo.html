@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Management Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .stat:last-child { border-bottom: none; }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        .stat-value {
+            color: #333;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .event {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .event h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .event-info {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #10b981;
+        }
+        .btn-secondary:hover {
+            background: #059669;
+        }
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+        }
+        .hidden { display: none; }
+        .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .action-btn {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .action-btn:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .action-btn-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .action-btn-text {
+            font-size: 13px;
+            color: #333;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen">
+            <div class="header">
+                <h1>🎉 Club Management Demo</h1>
+                <span class="badge">Working Demo</span>
+            </div>
+            
+            <div class="login-form">
+                <h2 style="margin-bottom: 20px; color: #333;">Login to Demo</h2>
+                
+                <div id="loginAlert" class="alert alert-info">
+                    This is a <strong>working demo</strong> that runs entirely in your browser!
+                </div>
+                
+                <div class="form-group">
+                    <label>Select Demo Account</label>
+                    <select id="accountSelect" onchange="fillCredentials()">
+                        <option value="">-- Choose Account --</option>
+                        <option value="owner">Owner (Full Access)</option>
+                        <option value="admin">Admin (Event Management)</option>
+                        <option value="user">User (Book Events)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="Enter email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div>
+                
+                <button class="btn" onclick="login()">Login to Demo</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboardScreen" class="hidden">
+            <div class="header">
+                <h1>🎉 Elite Club Dashboard</h1>
+                <p style="margin-top: 10px; color: #666;">Welcome, <strong id="userName"></strong> (<span id="userRole"></span>)</p>
+                <button class="btn" style="max-width: 200px; margin: 15px auto 0;" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid">
+                <div class="card">
+                    <h2>📊 Statistics</h2>
+                    <div class="stat">
+                        <span class="stat-label">Total Events</span>
+                        <span class="stat-value" id="totalEvents">4</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Total Bookings</span>
+                        <span class="stat-value" id="totalBookings">20</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Total Revenue</span>
+                        <span class="stat-value">₹18,500</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Active Users</span>
+                        <span class="stat-value">12</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 Quick Actions</h2>
+                    <div class="quick-actions">
+                        <div class="action-btn" onclick="showAlert('Feature coming soon!', 'info')">
+                            <div class="action-btn-icon">📅</div>
+                            <div class="action-btn-text">Create Event</div>
+                        </div>
+                        <div class="action-btn" onclick="showAlert('Feature coming soon!', 'info')">
+                            <div class="action-btn-icon">📧</div>
+                            <div class="action-btn-text">Send Notification</div>
+                        </div>
+                        <div class="action-btn" onclick="showAlert('Feature coming soon!', 'info')">
+                            <div class="action-btn-icon">📊</div>
+                            <div class="action-btn-text">View Reports</div>
+                        </div>
+                        <div class="action-btn" onclick="showAlert('Feature coming soon!', 'info')">
+                            <div class="action-btn-icon">⚙️</div>
+                            <div class="action-btn-text">Settings</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events -->
+            <div class="card">
+                <h2>🎪 Upcoming Events</h2>
+                <div id="eventsList"></div>
+            </div>
+
+            <!-- My Bookings -->
+            <div class="card" id="myBookingsCard">
+                <h2>🎫 My Bookings</h2>
+                <div id="bookingsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo data
+        const demoData = {
+            users: {
+                owner: { email: 'owner@club.com', password: 'password123', name: 'Club Owner', role: 'owner' },
+                admin: { email: 'admin@club.com', password: 'password123', name: 'Club Admin', role: 'admin' },
+                user: { email: 'user@club.com', password: 'password123', name: 'Regular User', role: 'user' }
+            },
+            events: [
+                {
+                    id: 1,
+                    title: 'Live Music Night',
+                    date: 'Tonight, 6 hours from now',
+                    capacity: 100,
+                    booked: 45,
+                    price: 500
+                },
+                {
+                    id: 2,
+                    title: 'Stand-Up Comedy Night',
+                    date: 'Tomorrow, 8 PM',
+                    capacity: 150,
+                    booked: 78,
+                    price: 600
+                },
+                {
+                    id: 3,
+                    title: 'Electronic Dance Night',
+                    date: 'Next week',
+                    capacity: 200,
+                    booked: 120,
+                    price: 800
+                },
+                {
+                    id: 4,
+                    title: 'Premium Wine Tasting',
+                    date: 'Next month',
+                    capacity: 50,
+                    booked: 15,
+                    price: 2500
+                }
+            ],
+            bookings: []
+        };
+
+        let currentUser = null;
+
+        function fillCredentials() {
+            const select = document.getElementById('accountSelect');
+            const account = select.value;
+            
+            if (account) {
+                const user = demoData.users[account];
+                document.getElementById('email').value = user.email;
+                document.getElementById('password').value = user.password;
+            }
+        }
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const user = Object.values(demoData.users).find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboardScreen').classList.remove('hidden');
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                
+                loadDashboard();
+                showAlert('Login successful! Welcome to the demo.', 'success');
+            } else {
+                showAlert('Invalid credentials. Try: owner@club.com / password123', 'error');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('dashboardScreen').classList.add('hidden');
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('accountSelect').value = '';
+        }
+
+        function loadDashboard() {
+            // Load events
+            const eventsList = document.getElementById('eventsList');
+            eventsList.innerHTML = demoData.events.map(event => {
+                const fillPercentage = (event.booked / event.capacity * 100).toFixed(0);
+                return `
+                    <div class="event">
+                        <h3>${event.title}</h3>
+                        <div class="event-info">
+                            <span>📅 ${event.date}</span>
+                            <span>👥 ${event.booked}/${event.capacity}</span>
+                            <span>💰 ₹${event.price}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${fillPercentage}%"></div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="bookEvent(${event.id})">Book Now</button>
+                    </div>
+                `;
+            }).join('');
+
+            // Load bookings for user
+            if (currentUser.role === 'user') {
+                const userBookings = demoData.bookings.filter(b => b.userEmail === currentUser.email);
+                const bookingsList = document.getElementById('bookingsList');
+                
+                if (userBookings.length === 0) {
+                    bookingsList.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No bookings yet. Book an event above!</p>';
+                } else {
+                    bookingsList.innerHTML = userBookings.map(booking => {
+                        const event = demoData.events.find(e => e.id === booking.eventId);
+                        return `
+                            <div class="event">
+                                <h3>${event.title}</h3>
+                                <div class="event-info">
+                                    <span>🎫 ${booking.seats} seat(s)</span>
+                                    <span>💰 ₹${booking.amount}</span>
+                                    <span>✅ Confirmed</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } else {
+                document.getElementById('myBookingsCard').classList.add('hidden');
+            }
+        }
+
+        function bookEvent(eventId) {
+            if (currentUser.role !== 'user') {
+                showAlert('Only users can book events. Login as user to book.', 'info');
+                return;
+            }
+
+            const event = demoData.events.find(e => e.id === eventId);
+            const seats = 2;
+
+            if (event.booked + seats > event.capacity) {
+                showAlert('Sorry, not enough seats available!', 'error');
+                return;
+            }
+
+            const booking = {
+                id: demoData.bookings.length + 1,
+                eventId: event.id,
+                userEmail: currentUser.email,
+                seats: seats,
+                amount: event.price * seats,
+                status: 'confirmed'
+            };
+
+            demoData.bookings.push(booking);
+            event.booked += seats;
+
+            loadDashboard();
+            showAlert(`Successfully booked ${seats} seats for ${event.title}!`, 'success');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.maxWidth = '400px';
+            alertDiv.style.zIndex = '1000';
+            alertDiv.style.animation = 'slideIn 0.3s ease-out';
+
+            document.body.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
